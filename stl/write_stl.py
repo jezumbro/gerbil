@@ -1,6 +1,5 @@
 import struct
-from typing import List, Tuple
-
+from typing import List, Tuple, Iterable
 
 ASCII_FACET = """  facet normal  {face[0]:e}  {face[1]:e}  {face[2]:e}
     outer loop
@@ -39,7 +38,7 @@ def triangle_to_facet(triangle) -> List[float]:
     return [dim for point in ([normal, *triangle]) for dim in point]
 
 
-def ascii_stl(triangles: List[Tuple[float, float, float]]) -> str:
+def ascii_stl(triangles: Iterable[Tuple[float, float, float]]) -> str:
     return "\n".join(
         (
             "solid shape",

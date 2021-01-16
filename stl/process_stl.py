@@ -38,17 +38,19 @@ def extrude_polygon(p: Polygon, height: float):
     triangles = polygon_to_triangles(p)
     top_triangles = [top_face(t, height) for t in triangles]
     bottom_triangles = [bottom_face(t) for t in triangles]
-    side_triangles = list(make_side_triangles(p.boundary, height))
+    side_triangles = list(make_side_triangles(p.boundary.coords, height))
     return chain(top_triangles, bottom_triangles, side_triangles)
 
 
 def extrude_many_polygons(polygons: Iterable[Polygon], height=5):
-    return [extrude_polygon(polygon, height) for polygon in polygons]
+    for polygon in polygons:
+        yield from extrude_polygon(polygon, height)
 
 
 if __name__ == "__main__":
     p = Polygon([(0, 0), (0, 50), (50, 50), (50, 0)])
+    print(list(p.boundary.coords))
     from pprint import pprint
 
-    pprint(list(extrude_polygon(p, 5)))
+    # pprint(list(extrude_polygon(p, 5)))
     # test_make_sides()
