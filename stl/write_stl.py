@@ -1,4 +1,6 @@
+import struct
 from typing import List, Tuple
+
 
 ASCII_FACET = """  facet normal  {face[0]:e}  {face[1]:e}  {face[2]:e}
     outer loop
@@ -9,25 +11,52 @@ ASCII_FACET = """  facet normal  {face[0]:e}  {face[1]:e}  {face[2]:e}
   endfacet"""
 
 
-def _build_ascii_stl(triangles: List[Tuple[float, float, float]]):
-    lines = [
-        "solid shape",
-    ]
-    for triangle in triangles:
-        print(triangle)
-        normal = calculate_normal(triangle)
-        face = [dim for point in ([normal, *triangle]) for dim in point]
-        lines.append(ASCII_FACET.format(face=face))
-    lines.append("endsolid shape")
-    return lines
+def ascii_facet(facet: List[float]):
+    return ASCII_FACET.format(face=facet)
 
 
-def write_stl(triangles, file_name):
-    f = open(file_name, "wb")
-    lines = _build_ascii_stl(triangles)
-    lines_ = "\n".join(lines).encode("UTF-8")
-    f.write(lines_)
-    f.close()
+BINARY_FACET = "12fH"
+
+
+def binary_facet(facet: List[float]):
+    return struct.pack(BINARY_FACET, *facet, 0)
+
+
+BINARY_HEADER = "80sI"
+
+
+def binary_stl(triangles: List[Tuple[float, float, float]]) -> bytes:
+    return b"".join(
+        (
+            struct.pack(BINARY_HEADER, b"Binary STL Writer", len(triangles)),
+            *(binary_facet(triangle_to_facet(triangle)) for triangle in triangles),
+        )
+    )
+
+
+def triangle_to_facet(triangle) -> List[float]:
+    normal = calculate_normal(triangle)
+    return [dim for point in ([normal, *triangle]) for dim in point]
+
+
+def ascii_stl(triangles: List[Tuple[float, float, float]]) -> str:
+    return "\n".join(
+        (
+            "solid shape",
+            *(ascii_facet(triangle_to_facet(t)) for t in triangles),
+            "endsolid shape",
+        )
+    )
+
+
+def write_ascii_stl(triangles: List[Tuple[float, float, float]], file_name: str):
+    with open(file_name, "w") as f:
+        f.write(ascii_stl(triangles))
+
+
+def write_binary_stl(triangles: List[Tuple[float, float, float]], file_name: str):
+    with open(file_name, "wb") as f:
+        f.write(binary_stl(triangles))
 
 
 def calculate_normal(triangle):
