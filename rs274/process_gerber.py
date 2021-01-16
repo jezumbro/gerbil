@@ -6,7 +6,7 @@ from shapely.geometry import CAP_STYLE, JOIN_STYLE, MultiPolygon, Polygon
 
 from rs274.primitives import lookup
 from settings import config
-from stl.process_stl import process_complex_shape
+from stl.process_stl import extrude_many_polygons
 
 
 def plot(polygons: MultiPolygon):
@@ -41,4 +41,7 @@ def merge_close_polygons(shape, eps: float = config.eps):
 if __name__ == "__main__":
     q = create_polygons(config.design_file)
     # plot(q)
-    process_complex_shape(q)
+    triangles = extrude_many_polygons(q, 5)
+    from stl.write_stl import write_stl
+
+    write_stl(triangles, "test.stl")
