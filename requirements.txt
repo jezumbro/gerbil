@@ -2,3 +2,5 @@ python-dotenv
 pcb-tools
 shapely
 descartes
+tripy
+sparkles

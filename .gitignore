@@ -5,11 +5,12 @@ __pycache__/
 
 # C extensions
 *.so
-
+# DESIGNS
+designs/
+*.stl
 # Distribution / packaging
 .Python
 .idea/
-designs/
 build/
 develop-eggs/
 dist/
@@ -131,3 +132,4 @@ dmypy.json
 .pyre/
 /designs/
 /designs/
+/rs274/output.stl
