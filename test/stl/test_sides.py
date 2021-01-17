@@ -17,8 +17,8 @@ def test_side_triangles():
     assert len(triangles) == 2
     assert all(len(q) == 3 for q in triangles)
     assert (*p1, 0) == t1[0]
-    assert (*p2, height) == t1[1]
-    assert (*p1, height) == t1[2]
+    assert (*p1, height) == t1[1]
+    assert (*p2, height) == t1[2]
     assert (*p1, 0) == t2[0]
     assert (*p2, height) == t2[1]
     assert (*p2, 0) == t2[2]

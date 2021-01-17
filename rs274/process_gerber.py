@@ -40,8 +40,7 @@ def merge_close_polygons(shape, eps: float = config.eps):
 
 if __name__ == "__main__":
     q = create_polygons(config.design_file)
-    # plot(q)
-    triangles = extrude_many_polygons(q, 5)
+    triangles = extrude_many_polygons(q, 1)
     from stl.write_stl import write_ascii_stl
 
     write_ascii_stl(triangles, "test.stl")

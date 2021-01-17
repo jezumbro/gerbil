@@ -13,13 +13,12 @@ def make_side_triangles(path: List[Tuple[float, float]], height: float = 0.1):
 def side_triangles_from_segment(
     p1: Tuple[float, float], p2: Tuple[float, float], height: float
 ):
-    yield (*p1, 0), (*p2, height), (*p1, height)
+    yield (*p1, 0), (*p1, height), (*p2, height)
     yield (*p1, 0), (*p2, height), (*p2, 0)
 
 
 def polygon_to_triangles(p: Polygon):
-    lr: LinearRing = LinearRing(p.boundary)
-    return tripy.earclip(lr.coords[:-1])
+    return tripy.earclip(p.boundary.coords[:-1])
 
 
 def add_z_coordinate(point2d: Tuple[float, float], height: float):
@@ -35,7 +34,7 @@ def bottom_face(triangle: Reversible[Tuple[float, float]]):
 
 
 def extrude_polygon(p: Polygon, height: float):
-    triangles = polygon_to_triangles(p)
+    triangles = list(polygon_to_triangles(p))
     top_triangles = [top_face(t, height) for t in triangles]
     bottom_triangles = [bottom_face(t) for t in triangles]
     side_triangles = list(make_side_triangles(p.boundary.coords, height))
