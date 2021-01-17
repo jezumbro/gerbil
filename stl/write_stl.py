@@ -25,6 +25,7 @@ BINARY_HEADER = "80sI"
 
 
 def binary_stl(triangles: List[Tuple[float, float, float]]) -> bytes:
+    triangles = list(triangles)
     return b"".join(
         (
             struct.pack(BINARY_HEADER, b"Binary STL Writer", len(triangles)),

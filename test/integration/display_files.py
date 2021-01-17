@@ -5,13 +5,16 @@ if __name__ == "__main__":
     q = [simple_triangle]
 
     triangles = extrude_many_polygons(q, 5)
-    from stl.write_stl import write_ascii_stl
-
-    write_ascii_stl(triangles, "test.stl")
+    from stl.write_stl import binary_stl
+    from io import BytesIO
     import trimesh
     import pyrender
 
-    fuze_trimesh = trimesh.load("test.stl")
+    with BytesIO() as f:
+        f.write(binary_stl(triangles))
+        f.seek(0)
+        fuze_trimesh = trimesh.load(f, file_type="stl")
+
     mesh = pyrender.Mesh.from_trimesh(fuze_trimesh)
     scene = pyrender.Scene()
     scene.add(mesh)

@@ -1,7 +1,7 @@
 from itertools import chain
 from typing import List, Tuple, Iterable, Reversible
 import tripy
-from shapely.geometry import LinearRing, Polygon
+from shapely.geometry import Polygon
 from sparkles import pairwise
 
 
