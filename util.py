@@ -9,6 +9,14 @@ def pairwise(iterable: Iterable):
     return zip(a, b)
 
 
+def n_wise(iterable, n=1):
+    iterators = itertools.tee(iterable, n)
+    for i in range(n):
+        for _ in range(i):
+            next(iterators[i], None)
+    return zip(*iterators)
+
+
 def first(iterable, *, default=..., condition=None):
     condition = condition or (lambda x: True)
     try:

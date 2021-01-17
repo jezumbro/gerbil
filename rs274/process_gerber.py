@@ -1,3 +1,4 @@
+from itertools import permutations
 from pathlib import Path
 
 from gerber import read as gerber_read
@@ -5,10 +6,10 @@ from gerber.rs274x import GerberFile
 from shapely.geometry import CAP_STYLE, JOIN_STYLE, MultiPolygon
 from shapely.ops import cascaded_union
 
-from rs274.plot import plot
 from rs274.primitives import lookup
 from settings import config
 from stl.process_stl import extrude_many_polygons
+from util import n_wise
 
 
 def plot(polygons):
@@ -50,9 +51,17 @@ def inner_polygons(shape):
             seen.append(point)
         else:
             idx = shape.index(point)
-            shapes.add(trim_shape(shape[idx : current_index + 1]))
+            raw = shape[idx : current_index + 1]
+            trimmed = trim_shape(raw)
+            de_duped = remove_duplicate_points(trimmed)
+            shapes.add(de_duped)
 
-    return shapes
+    for shape1, shape2 in list(permutations(shapes, 2)):
+        if index := find(shape1, shape2):
+            new_shape = shape2[:index] + shape2[index + len(shape1) :]
+            shapes.add(tuple(remove_duplicate_points(new_shape)))
+            shapes.remove(shape2)
+    return tuple(shapes)
 
 
 def trim_shape(shape):
@@ -61,6 +70,28 @@ def trim_shape(shape):
     if shape[0] == shape[-1] and shape[1] == shape[-2]:
         return tuple(shape[1:-1])
     return tuple(shape)
+
+
+def find(search_for, search_in):
+    if len(search_for) > len(search_in):
+        return None
+
+    item_count = len(search_for)
+    for index, items in enumerate(n_wise(search_in, item_count)):
+        if search_for == items:
+            return index
+    return None
+
+
+def remove_duplicate_points(shape):
+    if len(shape) < 1:
+        return shape
+    ret = [shape[0]]
+    for point in shape[1:]:
+        if point == ret[-1]:
+            continue
+        ret.append(point)
+    return tuple(ret)
 
 
 if __name__ == "__main__":

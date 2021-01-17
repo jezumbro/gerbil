@@ -1,9 +1,16 @@
+from pprint import pprint
+
 import pytest
 from shapely.geometry import LineString, MultiPolygon, Polygon
 from shapely.ops import cascaded_union
 
 from rs274.primitives import fix_region
-from rs274.process_gerber import merge_close_polygons, inner_polygons
+from rs274.process_gerber import (
+    merge_close_polygons,
+    inner_polygons,
+    find,
+    remove_duplicate_points,
+)
 from util import first
 
 
@@ -34,6 +41,10 @@ def test_inner_polygons_length(simple_region_with_hole):
     assert len(list(inner_polygons(simple_region_with_hole))) == 1
 
 
+def test_nested_polygons_length(simple_region_with_nested_hole):
+    assert len(list(inner_polygons(simple_region_with_nested_hole))) == 2
+
+
 def test_inner_polygon_points(simple_region_with_hole):
     poly = first(inner_polygons(simple_region_with_hole))
     expected = (
@@ -45,3 +56,51 @@ def test_inner_polygon_points(simple_region_with_hole):
         (8, 5),
     )
     assert poly == expected
+
+
+def test_find():
+    assert find(tuple("DEF"), tuple("ABCDEFG")) == 3
+
+
+def test_find_with_longer_strings():
+    assert not find(tuple("DEF"), tuple("A"))
+
+
+def test_find_doesnt_false_positive():
+    assert not find(tuple("DEF"), tuple("FEDA"))
+
+
+def test_remove_duplicate_points():
+    in_data = ((1.0, 2.0), (1.0, 2.0))
+    assert remove_duplicate_points(in_data) == ((1, 2),)
+
+
+def test_remove_duplicate_points_no_dups():
+    in_data = ((1.0, 2.0), (1.0, 3.0))
+    assert remove_duplicate_points(in_data) == ((1, 2), (1, 3))
+
+
+def test_nested_polygon_shapes(simple_region_with_nested_hole):
+    first = (
+        (9, 5),
+        (9, 2),
+        (6, 2),
+        (6, 5),
+        (6, 7),
+        (9, 7),
+        (9, 5),
+    )
+
+    second = (
+        (4, 5),
+        (4, 2),
+        (1, 2),
+        (1, 7),
+        (4, 7),
+        (4, 5),
+    )
+
+    polys = inner_polygons(simple_region_with_nested_hole)
+    pprint(polys)
+    assert second in polys, "second not found"
+    assert first in polys, "first not found"

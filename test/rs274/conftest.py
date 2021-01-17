@@ -26,18 +26,26 @@ def simple_region_with_hole():
 @pytest.fixture
 def simple_region_with_nested_hole():
     """
-    10 by 10 with 3x3 holes in it
+    10 by 10 with 3x6 holes in it one is nested in other
     """
     return [
         (0, 0),
         (10, 0),
         (10, 5),
-        (9, 5),
+        (9, 5),  # first half of 1st 3x6
         (9, 2),
         (6, 2),
-        (6, 5),
-        (8, 8),
-        (8, 5),
+        (6, 5),  # end first half
+        (4, 5),  # start nested
+        (4, 2),
+        (1, 2),
+        (1, 7),
+        (4, 7),
+        (4, 5),  # end nested
+        (6, 5),  # start 2nd half
+        (6, 7),
+        (9, 7),
+        (9, 5),  # start 2nd half
         (10, 5),
         (10, 10),
         (0, 10),
