@@ -104,3 +104,9 @@ def test_nested_polygon_shapes(simple_region_with_nested_hole):
     pprint(polys)
     assert second in polys, "second not found"
     assert first in polys, "first not found"
+
+
+def test_triple_nested_holes(triple_nested_holes):
+    polys = inner_polygons(triple_nested_holes)
+    pprint(polys)
+    assert len(polys) == 3

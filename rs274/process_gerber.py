@@ -60,7 +60,8 @@ def inner_polygons(shape):
         if index := find(shape1, shape2):
             new_shape = shape2[:index] + shape2[index + len(shape1) :]
             shapes.add(tuple(remove_duplicate_points(new_shape)))
-            shapes.remove(shape2)
+            if shape2 in shapes:
+                shapes.remove(shape2)
     return tuple(shapes)
 
 

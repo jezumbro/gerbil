@@ -54,6 +54,41 @@ def simple_region_with_nested_hole():
 
 
 @pytest.fixture
+def triple_nested_holes():
+    """
+    14 by 10 with 3 nested holes
+    """
+    return [
+        (0, 0),
+        (14, 0),
+        (14, 5),
+        (13, 5),
+        (13, 2),
+        (10, 2),
+        (10, 5),
+        (9, 5),  # first half of 1st 3x6
+        (9, 2),
+        (6, 2),
+        (6, 5),  # end first half
+        (4, 5),  # start nested
+        (4, 2),
+        (1, 2),
+        (1, 7),
+        (4, 7),
+        (4, 5),  # end nested
+        (6, 5),  # start 2nd half
+        (6, 7),
+        (9, 7),
+        (9, 5),  # start 2nd half
+        (10, 5),
+        (14, 5),
+        (14, 10),
+        (0, 10),
+        (0, 0),
+    ]
+
+
+@pytest.fixture
 def complex_region_with_holes():
     return [
         (81.81, -25.484),
