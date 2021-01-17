@@ -16,16 +16,33 @@ def process_line(x: Line) -> List[Tuple[float, float]]:
     return [x.start, x.end]
 
 
-def process_region(x: Region):
-    vertices = []
+def get_verticies(x: Region):
+    ret = []
     for primitive in x.primitives:
         key = type(primitive)
         if func := lookup.get(key):
             for i in func(primitive):
-                if i in vertices:
-                    continue
-                vertices.append(i)
-    return Polygon(vertices)
+                ret.append(i)
+    return ret
+
+
+def find_holes(coords: List[Tuple[float, float]]):
+    holes = []
+    print("total", len(coords))
+    for idx, coord in enumerate(coords, start=1):
+        reduced_list = coords[idx:]
+        if coord in reduced_list[1:]:
+            print(coord, idx - 1, reduced_list[1:].index(coord))
+    pass
+
+
+def fix_region(v):
+    holes = find_holes(v)
+    return Polygon(v)
+
+
+def process_region(x: Region):
+    return fix_region(get_verticies(x))
 
 
 lookup = {
