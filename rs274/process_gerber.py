@@ -41,10 +41,32 @@ def merge_close_polygons(shape, eps: float = config.eps):
     ).buffer(distance=-eps, cap_style=CAP_STYLE.square, join_style=JOIN_STYLE.mitre)
 
 
+def inner_polygons(shape):
+    shape = shape[1:]
+    seen = []
+    shapes = set()
+    for current_index, point in enumerate(shape):
+        if point not in seen:
+            seen.append(point)
+        else:
+            idx = shape.index(point)
+            shapes.add(trim_shape(shape[idx : current_index + 1]))
+
+    return shapes
+
+
+def trim_shape(shape):
+    if len(shape) <= 4:
+        return shape
+    if shape[0] == shape[-1] and shape[1] == shape[-2]:
+        return tuple(shape[1:-1])
+    return tuple(shape)
+
+
 if __name__ == "__main__":
     q = create_polygons(config.design_file)
-    # plot(q)
-    triangles = extrude_many_polygons(q, 5)
+    plot(q)
+    triangles = extrude_many_polygons(q, 1)
     from stl.write_stl import write_ascii_stl
 
     write_ascii_stl(triangles, "test.stl")

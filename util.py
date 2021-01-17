@@ -7,3 +7,13 @@ def pairwise(iterable: Iterable):
     a, b = itertools.tee(iterable)
     next(b, None)
     return zip(a, b)
+
+
+def first(iterable, *, default=..., condition=None):
+    condition = condition or (lambda x: True)
+    try:
+        return next(x for x in iterable if condition(x))
+    except StopIteration:
+        if default is ...:
+            raise
+        return default

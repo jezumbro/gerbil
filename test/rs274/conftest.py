@@ -3,14 +3,39 @@ import pytest
 
 @pytest.fixture
 def simple_region_with_hole():
+    """
+    10 by 10 with an 6 by 6 hole in the middle
+    """
     return [
         (0, 0),
         (10, 0),
         (10, 5),
-        (8, 5),
+        (8, 5),  # start inner 6x6
         (8, 2),
         (2, 2),
         (2, 8),
+        (8, 8),
+        (8, 5),  # end inner 6x6
+        (10, 5),
+        (10, 10),
+        (0, 10),
+        (0, 0),
+    ]
+
+
+@pytest.fixture
+def simple_region_with_nested_hole():
+    """
+    10 by 10 with 3x3 holes in it
+    """
+    return [
+        (0, 0),
+        (10, 0),
+        (10, 5),
+        (9, 5),
+        (9, 2),
+        (6, 2),
+        (6, 5),
         (8, 8),
         (8, 5),
         (10, 5),
