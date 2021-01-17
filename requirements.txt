@@ -3,4 +3,5 @@ pcb-tools
 shapely
 descartes
 tripy
-sparkles
+PySimpleGUI
+loguru
