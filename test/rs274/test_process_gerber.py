@@ -4,13 +4,9 @@ import pytest
 from shapely.geometry import LineString, MultiPolygon, Polygon
 from shapely.ops import cascaded_union
 
-from rs274.primitives import fix_region
-from rs274.process_gerber import (
-    merge_close_polygons,
-    inner_polygons,
-    find,
-    remove_duplicate_points,
-)
+from rs274.primitives import (find, fix_region, inner_polygons,
+                              remove_duplicate_points)
+from rs274.process_gerber import merge_close_polygons
 from util import first
 
 

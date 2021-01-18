@@ -109,8 +109,8 @@ def export():
         ],
         [sg.T(size=default_size)],
         [
-            sg.T(size=default_size),
-            sg.T(size=default_size),
+            sg.Button("Load", key="load", size=(12, 1)),
+            sg.Button("Save", key="save", size=(12, 1)),
             sg.T(size=(9, 1)),
             sg.Button("Export", key="optimization", size=(12, 1)),
         ],

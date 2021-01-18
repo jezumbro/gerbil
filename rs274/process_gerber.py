@@ -9,7 +9,6 @@ from shapely.ops import cascaded_union
 from rs274.primitives import lookup
 from settings import config
 from stl.process_stl import extrude_many_polygons
-from util import n_wise
 
 
 def plot(polygons):
