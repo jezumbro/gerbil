@@ -11,7 +11,7 @@ from validaton.main import parse_float
 
 
 def move_statement(*, x: float = 0, y: float = 0, z: float = 0):
-    return f"move {x:.3f}, {y:.3f} {z:.3f}"
+    return f"move {x:.3f} {y:.3f} {z:.3f}"
 
 
 def move_z_direction(speed: float, distance: float):
@@ -95,6 +95,7 @@ def format_optimization_job_lines(parameters: dict):
                 move_statement(z=params.dispense_gap - previous_params.dispense_gap)
             )
         lines.extend(format_line(params, print_distance, pitch))
+        previous_params = params
     return lines
 
 
