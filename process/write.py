@@ -13,6 +13,42 @@ def process(values: Dict[str, str], settings: dict):
     pass
 
 
+@dataclass
+class Recipe:
+    name: str
+    data: dict
+
+    def save_recipe_to_disk(self, file: RecipeFile):
+        existing = file.load()
+        existing[self.name] = self.data
+        file.save(existing)
+
+    def save_recipe_to_server(self, url, psk):
+        pass
+
+
+class RecipeFile:
+    path: Path = Path("./recipes.json")
+    data: dict = None
+
+    def load(self):
+        if not self.path.is_file():
+            self.data = {}
+        else:
+            with open(self.path, "r") as f:
+                self.data = json.load(f)
+
+    def save(self):
+        with open(self.path, "w") as f:
+            json.dump(self.data, f)
+
+    def add_recipe(self, r: Recipe):
+        self.data[r.name] = r
+
+    def __getitem__(self, item):
+        return self.data[item]
+
+
 def save_settings(values: Dict[str, str], settings: dict):
     process_name = values.get("process_name")
     if not process_name:
