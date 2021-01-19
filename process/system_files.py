@@ -124,4 +124,4 @@ def write_script(values: dict):
     psj_dir.absolute().mkdir(parents=True, exist_ok=True)
     with open(psj_file.absolute(), "w") as f:
         f.write("\n".join(format_optimization_job_lines(values)))
-    logger.info("Exported optimization file")
+    logger.info(f"Exported optimization file {psj_file.absolute()}")
