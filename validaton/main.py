@@ -6,13 +6,14 @@ from loguru import logger
 
 def check_input(event: str, values: Dict[str, str], window: sg.Window):
     element = window[event]
-    if good_input(event, values):
+    if good_float(event, values):
         element.update(text_color="black")
-        return
+        return True
     element.update(text_color="red")
+    return False
 
 
-def good_input(e: str, v: Dict[str, str]):
+def good_float(e: str, v: Dict[str, str]):
     try:
         d = float(v.get(e))
         return f"{d:0.3f}"

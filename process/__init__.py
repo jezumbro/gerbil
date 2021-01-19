@@ -1,7 +1,12 @@
 from PySimpleGUI import Window
 
-from .optimization import process
+from .configuration import on_load
+from .write import process
 
 
-def optimization_process(values: str, **kwargs):
-    return process(values)
+def process_optimization(values: str, settings: dict, **kwargs):
+    return process(values, settings)
+
+
+def process_load(**kwargs):
+    return on_load()

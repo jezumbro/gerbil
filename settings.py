@@ -8,8 +8,6 @@ load_dotenv()
 class Config:
     design_file: str = ""
     eps: float = 0.005
-    optimization_dir: str = r"C:\Transfer\Installs\MTGen3\Projects"
-    optimization_project: str = "optimization"
 
     def __init__(self):
         for env_variable, value_class in self.__class__.__dict__[
