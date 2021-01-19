@@ -7,11 +7,11 @@ from typing import Dict, List
 
 from loguru import logger
 
+from model import Settings
 from util import first
 from validaton.main import good_float
 
 from .configuration import config_path
-from .model import Settings
 
 
 def process(values: Dict[str, str], settings: dict):

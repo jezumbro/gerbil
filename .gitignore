@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 # DESIGNS
+original/
 designs/
 *.stl
 # Distribution / packaging
@@ -133,3 +134,4 @@ dmypy.json
 /designs/
 /designs/
 /rs274/output.stl
+/original/

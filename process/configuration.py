@@ -1,27 +1,4 @@
-import json
-from pathlib import Path
-
-from process.model import Settings
-
-config_path = Path("./settings.json")
-
-
-def read_config(p: Path):
-    with open(p.absolute(), "r") as f:
-        return Settings(**json.load(f))
-
-
-def write_config(p: Path):
-    data = {
-        "eps": 0.005,
-        "project_dir": r"C:\Transfer\Installs\MTGen3\Projects",
-        "optimization_project": "optimization",
-        "script_dir": "scripts",
-        "recipes": [],
-    }
-    with open(p.absolute(), "w") as f:
-        json.dump(data, f)
-    return Settings(**data)
+from configuration import config_path, read_config, write_config
 
 
 def get_recipes():
@@ -30,8 +7,8 @@ def get_recipes():
 
 def startup():
     if config_path.is_file():
-        return read_config(config_path)
-    return write_config(config_path)
+        return read_config()
+    return write_config()
 
 
 if __name__ == "__main__":

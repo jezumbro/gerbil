@@ -4,8 +4,9 @@ from pathlib import Path
 
 from loguru import logger
 
-from process.model import OptimizationParams, PrintParams
-from process.write import load_settings
+from configuration import read_config
+from model import OptimizationParams, PrintParams
+from server import post_data
 from util import get_interpolated_value
 from validaton.main import parse_float
 
@@ -111,7 +112,8 @@ def header(params: PrintParams):
 
 
 def write_script(values: dict):
-    settings = load_settings()
+    settings = read_config()
+    post_data("optimization_raw", values)
     psj_file = (
         Path(settings.project_dir)
         / settings.optimization_project

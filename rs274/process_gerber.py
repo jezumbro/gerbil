@@ -35,7 +35,7 @@ def create_polygons(file_name: str = None):
     return merge_close_polygons(poly)
 
 
-def merge_close_polygons(shape, eps: float = config.eps):
+def merge_close_polygons(shape, eps: float = 0.005):
     return shape.buffer(
         distance=eps, cap_style=CAP_STYLE.square, join_style=JOIN_STYLE.mitre
     ).buffer(distance=-eps, cap_style=CAP_STYLE.square, join_style=JOIN_STYLE.mitre)

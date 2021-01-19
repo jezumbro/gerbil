@@ -6,6 +6,7 @@ from typing import List
 
 @dataclass
 class Settings:
+    uuid: str
     project_dir: str
     optimization_project: str
     script_dir: str

@@ -3,6 +3,7 @@ from logging import getLogger
 from logging.handlers import QueueHandler
 
 import PySimpleGUI as sg
+from loguru import logger
 
 from app_tabs.logging import log_tab
 from app_tabs.parameters import parameter_tab
@@ -23,7 +24,6 @@ lookup = {
 log_queue = queue.Queue()
 queue_handler = QueueHandler(log_queue)
 # logger = getLogger()
-from loguru import logger
 
 logger.add(queue_handler)
 
