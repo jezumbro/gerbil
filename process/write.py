@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List
 
@@ -5,6 +9,8 @@ from loguru import logger
 
 from util import first
 from validaton.main import good_float
+
+from .configuration import config_path
 
 
 def process(values: Dict[str, str], settings: dict):
@@ -49,39 +55,73 @@ class RecipeFile:
         return self.data[item]
 
 
-def save_settings(values: Dict[str, str], settings: dict):
-    process_name = values.get("process_name")
-    if not process_name:
-        logger.error("Invalid process name")
+def save_recipe(values: Dict[str, str], settings: dict, path=None):
+    recipe_name = values.get("recipe_name")
+    if not recipe_name:
+        logger.error("Invalid recipe name")
         return
-    good_values = get_settings(values)
-    if not good_values:
-        logger.error("Unable to invalid argument in settings")
+    good_recipe = get_settings(values)
+    if not good_recipe:
+        logger.debug(good_recipe)
+        logger.error("Invalid argument in settings")
         return
-    recipes: List[dict] = settings["recipes"]
+    logger.debug(settings)
+    recipes: List[dict] = settings.get("recipes", [])
 
     def match_name(x: dict):
-        return x.get("name").casefold() == process_name.casefold()
+        return x.get("recipe_name").casefold() == recipe_name.casefold()
 
-    recipe = first(recipes, condition=match_name, default=None)
-    # TODO
-    if not recipe:
-        recipes.append()
-    pass
+    recipe: dict = first(recipes, condition=match_name, default=None)
+    if recipe:
+        recipe = updated_recipe
+    else:
+        recipes.append(updated_recipe)
+    settings["recipes"] = recipes
+    logger.debug(settings)
+    save_settings(settings, path)
+
+
+def save_settings(settings: dict, path=None):
+    with open((path or config_path).absolute(), "w") as f:
+        json.dump(settings, f)
+
+
+def get_recipe(values: dict):
+    return {convert_key(k): v for k, v in values.items() if convert_key(k)}
 
 
 def get_settings(values: Dict[str, str]):
-    if any(good_float(k, values) is None for k, _ in values.items() if valid_key(k)):
-        logger.error("Unable to invalid argument in settings")
-        return
-    return {k: good_float(k, values) for k, v in values.items() if valid_key(k)}
+    try:
+        return {
+            k: good_float(k, values) for k, v in values.items() if valid_key(k) and v
+        }
+    except:
+        return None
+
+
+def set_values(values, recipe):
+    for k, v in recipe.items():
+        values[f"{k}_0"] = v
+
+
+def load_recipe(values: Dict[str, str], settings: dict):
+    def match_name(x: dict):
+        return values.get("recipe_name").casefold() == x.get("recipe_name").casefold()
+
+    recipe = first(settings.get("recipes"), condition=match_name, default=None)
+    set_values(values, recipe)
+    return
 
 
 def valid_key(x: str):
+    if type(x) is not str:
+        return False
     return x.endswith("_0") or x.endswith("_1")
 
 
 def convert_key(x: str):
+    if type(x) is not str:
+        return None
     if x.endswith("_0"):
         return x.replace("_0", "")
     return None

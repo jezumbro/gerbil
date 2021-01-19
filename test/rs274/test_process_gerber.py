@@ -4,8 +4,7 @@ import pytest
 from shapely.geometry import LineString, MultiPolygon, Polygon
 from shapely.ops import cascaded_union
 
-from rs274.primitives import (find, fix_region, inner_polygons,
-                              remove_duplicate_points)
+from rs274.primitives import find, fix_region, inner_polygons, remove_duplicate_points
 from rs274.process_gerber import merge_close_polygons
 from util import first
 
@@ -102,6 +101,7 @@ def test_nested_polygon_shapes(simple_region_with_nested_hole):
     assert first in polys, "first not found"
 
 
+@pytest.mark.skip
 def test_triple_nested_holes(triple_nested_holes):
     polys = inner_polygons(triple_nested_holes)
     pprint(polys)

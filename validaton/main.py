@@ -4,7 +4,7 @@ import PySimpleGUI as sg
 from loguru import logger
 
 
-def check_input(event: str, values: Dict[str, str], window: sg.Window):
+def check_input(event: str, values: Dict[str, str], window: sg.Window, **kwargs):
     element = window[event]
     if good_float(event, values):
         element.update(text_color="black")

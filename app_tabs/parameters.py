@@ -2,6 +2,7 @@ from typing import List
 
 import PySimpleGUI as sg
 
+from process.configuration import get_recipes
 from settings import config
 
 
@@ -61,12 +62,22 @@ def valve_group():
 
 
 def pressure_group():
-    rows = [
-        ("Pressure:", "pressure", "psi", "0"),
-        ("Wait Time:", "wait_time", "sec", "0"),
-        blank_parameter_row(),
+    return [
+        tunable_parameter("Pressure:", "pressure", "psi", "0"),
+        tunable_parameter("Wait Time:", "wait_time", "sec", "0"),
+        [
+            sg.T(text="Temperature:", size=default_size),
+            sg.I(None, key=f"temperature", size=default_size, enable_events=True),
+            sg.T(text="C", size=unit_size),
+            sg.T(size=default_size),
+        ],
+        [
+            sg.T(text="Humidity:", size=default_size),
+            sg.I(None, key=f"humidity", size=default_size, enable_events=True),
+            sg.T(text="%", size=unit_size),
+            sg.T(size=default_size),
+        ],
     ]
-    return [tunable_parameter(*row) for row in rows]
 
 
 def speed_group():
@@ -100,14 +111,11 @@ def optimization():
 def export():
     return [
         [
-            sg.T("Project:", size=default_size),
-            sg.I(
-                f"{config.optimization_dir}\\{config.optimization_project}\\",
-                disabled=True,
-                size=(44, 1),
-            ),
+            sg.T("Recipe Name:", size=default_size),
+            sg.InputCombo(values=get_recipes(), key="recipe_name", size=default_size),
         ],
-        [sg.T(size=default_size)],
+        [sg.T("Material:", size=default_size), sg.I(key="material", size=default_size)],
+        [sg.T("Pen Tip:", size=default_size), sg.I(key="pen_tip", size=default_size)],
         [
             sg.Button("Load", key="load", size=(12, 1)),
             sg.Button("Save", key="save", size=(12, 1)),
