@@ -94,7 +94,7 @@ def speed_group():
 def height_group():
     return [
         fixed_parameter("Line Width:", "line_width", "mm", "0.100"),
-        tunable_parameter("Travel Height:", "travel_height", "mm", "0.500"),
+        fixed_parameter("Travel Height:", "travel_height", "mm", "0.500"),
         tunable_parameter("Dispense Gap:", "dispense_gap", "mm", "0.500"),
     ]
 
@@ -112,7 +112,7 @@ def export():
     return [
         [
             sg.T("Recipe Name:", size=default_size),
-            sg.InputCombo(values=get_recipes(), key="recipe_name", size=default_size),
+            # sg.InputCombo(values=get_recipes(), key="recipe_name", size=default_size),
         ],
         [sg.T("Material:", size=default_size), sg.I(key="material", size=default_size)],
         [sg.T("Pen Tip:", size=default_size), sg.I(key="pen_tip", size=default_size)],

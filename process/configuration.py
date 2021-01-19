@@ -1,12 +1,14 @@
 import json
 from pathlib import Path
 
+from process.model import Settings
+
 config_path = Path("./settings.json")
 
 
 def read_config(p: Path):
     with open(p.absolute(), "r") as f:
-        return json.load(f)
+        return Settings(**json.load(f))
 
 
 def write_config(p: Path):
@@ -19,12 +21,11 @@ def write_config(p: Path):
     }
     with open(p.absolute(), "w") as f:
         json.dump(data, f)
-    return data
+    return Settings(**data)
 
 
 def get_recipes():
-    c: dict = read_config(config_path)
-    return [r.get("recipe_name") for r in c.get("recipes", [])]
+    pass
 
 
 def startup():

@@ -25,3 +25,19 @@ def first(iterable, *, default=..., condition=None):
         if default is ...:
             raise
         return default
+
+
+def get_interpolated_value(start: float, step: int, end: float = None, steps=10):
+    if end is None:
+        return start
+    return list(interpolate(start, end, steps))[step]
+
+
+def interpolate(start: float, end: float = None, steps=10):
+    if steps <= 1:
+        return start
+    delta = end - start
+    step_size = delta / (steps - 1)
+
+    for v in range(steps):
+        yield start + v * step_size

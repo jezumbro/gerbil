@@ -1,9 +1,10 @@
 from .configuration import startup
+from .system_files import write_script
 from .write import get_recipe, load_recipe, process, save_recipe
 
 
 def process_optimization(values: dict, settings: dict, **kwargs):
-    return process(values, settings)
+    return write_script(values)
 
 
 def process_startup(**kwargs):

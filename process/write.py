@@ -11,6 +11,7 @@ from util import first
 from validaton.main import good_float
 
 from .configuration import config_path
+from .model import Settings
 
 
 def process(values: Dict[str, str], settings: dict):
@@ -72,13 +73,11 @@ def save_recipe(values: Dict[str, str], settings: dict, path=None):
         return x.get("recipe_name").casefold() == recipe_name.casefold()
 
     recipe: dict = first(recipes, condition=match_name, default=None)
-    if recipe:
-        recipe = updated_recipe
-    else:
-        recipes.append(updated_recipe)
-    settings["recipes"] = recipes
-    logger.debug(settings)
-    save_settings(settings, path)
+
+
+def load_settings(path=None):
+    with open((path or config_path).absolute(), "r") as f:
+        return Settings(**json.load(f))
 
 
 def save_settings(settings: dict, path=None):
