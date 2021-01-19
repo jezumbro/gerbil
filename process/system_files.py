@@ -115,7 +115,7 @@ def write_script(values: dict):
         Path(settings.project_dir)
         / settings.optimization_project
         / settings.script_dir
-        / "optimization_script.psj"
+        / "optimization_script.txt"
     )
     psj_dir = (
         Path(settings.project_dir) / settings.optimization_project / settings.script_dir
