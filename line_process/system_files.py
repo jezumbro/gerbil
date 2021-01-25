@@ -24,7 +24,7 @@ def print_statement(print_speed: float, *, x: float = 0, y: float = 0):
 
 
 def open_valve(distance: float, speed: float, delay: float):
-    return [f"valverel {distance:.3f} {speed:.3f}", f"wait {delay:.3f}"]
+    return [f"trigvalverel {distance:.3f} {speed:.3f}", f"wait {delay:.3f}"]
 
 
 def close_valve(speed: float, delay: float):
@@ -47,7 +47,7 @@ def parse_parameters(parameters):
     for k, v in parameters.items():
         if type(k) is not str:
             continue
-        new = k.replace("_0", "").replace("_1", "")
+        new = format_key(k)
         if new not in PrintParams.parameters():
             continue
         ret[new].append(parse_float(v))
@@ -57,13 +57,29 @@ def parse_parameters(parameters):
     return ret
 
 
+def format_key(k: str):
+    return k.replace("_0", "").replace("_1", "").replace("line_", "")
+
+
 def get_optimization_params(parameters):
     ret = {}
     for k, v in parameters.items():
-        if k in ["pitch_0", "print_distance_0", "step_count_0"]:
-            new = k.replace("_0", "").replace("_1", "")
+        if type(k) != str:
+            continue
+        if any(field in k for field in ["pitch_0", "print_distance_0", "step_count_0"]):
+            new = format_key(k)
             ret[new] = parse_float(v)
     return ret
+
+
+def get_default_printing_params(parameters: dict) -> PrintParams:
+    printing_params = parse_parameters(parameters)
+    return PrintParams(
+        **{
+            k: get_interpolated_value(start, 0)
+            for k, (start, end) in printing_params.items()
+        }
+    )
 
 
 def get_optimization_parameters(parameters: dict):

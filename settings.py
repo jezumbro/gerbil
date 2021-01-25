@@ -7,6 +7,7 @@ load_dotenv()
 
 class Config:
     design_file: str = ""
+    slic3r_exe: str = ""
 
     def __init__(self):
         for env_variable, value_class in self.__class__.__dict__[

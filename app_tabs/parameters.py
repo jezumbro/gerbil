@@ -1,9 +1,6 @@
-from typing import List
-
 import PySimpleGUI as sg
 
-from process.configuration import get_recipes
-from settings import config
+PREFIX = "line"
 
 
 def get_frames():
@@ -28,18 +25,18 @@ def tunable_parameter(title, name, unit="mm", default=None):
     if not title:
         return [sg.T()]
     return [
-        sg.T(text=title, key=f"{name}_label", size=default_size),
-        sg.I(default, key=f"{name}_0", size=default_size, enable_events=True),
-        sg.T(text=unit, key=f"{name}_unit", size=unit_size),
-        sg.I(None, key=f"{name}_1", size=default_size),
+        sg.T(text=title, key=f"{PREFIX}_{name}_label", size=default_size),
+        sg.I(default, key=f"{PREFIX}_{name}_0", size=default_size, enable_events=True),
+        sg.T(text=unit, key=f"{PREFIX}_{name}_unit", size=unit_size),
+        sg.I(None, key=f"{PREFIX}_{name}_1", size=default_size),
     ]
 
 
 def fixed_parameter(title, name, unit="mm", default=None, append_blank=True):
     elements = [
-        sg.T(text=title, key=f"{name}_label", size=default_size),
-        sg.I(default, key=f"{name}_0", size=default_size, enable_events=True),
-        sg.T(text=unit, key=f"{name}_unit", size=unit_size),
+        sg.T(text=title, key=f"{PREFIX}_{name}_label", size=default_size),
+        sg.I(default, key=f"{PREFIX}_{name}_0", size=default_size, enable_events=True),
+        sg.T(text=unit, key=f"{PREFIX}_{name}_unit", size=unit_size),
     ]
     if append_blank:
         elements.append(sg.T(size=default_size))
@@ -112,13 +109,13 @@ def export():
     return [
         [
             sg.T("Recipe Name:", size=default_size),
-            # sg.InputCombo(values=get_recipes(), key="recipe_name", size=default_size),
+            sg.I(key="recipe_name", size=default_size),
+            sg.FileBrowse("Load", key="load", size=(12, 1)),
         ],
         [sg.T("Material:", size=default_size), sg.I(key="material", size=default_size)],
         [sg.T("Pen Tip:", size=default_size), sg.I(key="pen_tip", size=default_size)],
         [
-            sg.Button("Load", key="load", size=(12, 1)),
-            sg.Button("Save", key="save", size=(12, 1)),
+            sg.FileSaveAs("Save", key="save", size=(12, 1)),
             sg.T(size=(9, 1)),
             sg.Button("Export", key="optimization", size=(12, 1)),
         ],

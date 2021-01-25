@@ -1,4 +1,5 @@
-from .configuration import startup
+from configuration import config_path, read_config, write_config
+
 from .system_files import write_script
 from .write import get_recipe, load_recipe, process, save_recipe
 
@@ -8,7 +9,9 @@ def process_optimization(values: dict, settings: dict, **kwargs):
 
 
 def process_startup(**kwargs):
-    return startup()
+    if config_path.is_file():
+        return read_config()
+    return write_config()
 
 
 def process_save(values: dict, settings: dict, **kwargs):

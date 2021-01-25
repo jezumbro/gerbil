@@ -1,6 +1,6 @@
 from pprint import pprint
 
-from process.system_files import format_optimization_job_lines, open_valve
+from line_process.system_files import format_optimization_job_lines, open_valve
 
 
 def test_open_valve():
