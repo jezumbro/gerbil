@@ -37,7 +37,7 @@ def call_slic3r(params: PrintParams, file_path: Path):
         file_path = stl_file
     cmd = (
         f"{settings.slic3r_exe} --export-gcode --center 0,0 --nozzle-diameter {params.line_width}"
-        + f" --first-layer-height {params.line_width} --layer-height {params.line_width}"
+        + f" --first-layer-height {params.dispense_gap} --layer-height {params.line_width}"
         + f" --filament-retract-lift {params.travel_height}"
         + f" --infill-first --infill-only-where-needed --skirts 0 {file_path.absolute()}"
     )
