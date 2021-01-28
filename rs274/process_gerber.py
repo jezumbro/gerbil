@@ -22,7 +22,7 @@ def plot(polygons):
 
 def create_polygons(file_name: str = None):
     p = Path(file_name)
-    layer: GerberFile = gerber_read(p.absolute())
+    layer: GerberFile = gerber_read(str(p.absolute()))
     missing = set()
     dark = []
     for idx, primitive in enumerate(layer.primitives):

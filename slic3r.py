@@ -4,6 +4,7 @@ from pathlib import Path
 from loguru import logger
 
 from configuration import read_config
+from gcode.parse import write_psj_file
 from line_process.system_files import get_default_printing_params
 from model import PrintParams
 from rs274.process_gerber import create_polygons
@@ -24,7 +25,9 @@ def process_slicer(values: dict, **kwargs):
     design_file = values.get("design_file")
     if not design_file:
         logger.warning("Unable to find design file")
-    call_slic3r(params, Path(design_file))
+    file = Path(design_file)
+    call_slic3r(params, file)
+    write_psj_file(params, file)
 
 
 def call_slic3r(params: PrintParams, file_path: Path):
