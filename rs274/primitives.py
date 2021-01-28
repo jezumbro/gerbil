@@ -2,11 +2,11 @@ from itertools import permutations
 from pprint import pprint
 from typing import List, Tuple
 
-from gerber.primitives import Circle, Line, Rectangle, Region
+from gerber.primitives import Arc, Circle, Line, Rectangle, Region
 from loguru import logger
 from shapely.geometry import Point, Polygon
 
-from util import n_wise
+from util import interpolate, n_wise
 
 
 def process_rectangle(x: Rectangle):
@@ -31,6 +31,7 @@ def get_verticies(x: Region):
                 ret.extend(q)
             else:
                 ret.append(q[0])
+            continue
     return ret
 
 
@@ -47,11 +48,26 @@ def process_region(x: Region):
     return fix_region(get_verticies(x))
 
 
+from math import cos, sin
+
+
+def process_arc(a: Arc):
+    x, y = a.center
+    if a.direction == "counterclockwise" and a.start_angle == a.end_angle:
+        steps = interpolate(a.end_angle, -a.start_angle, 20)
+        for step in steps:
+            dx, dy = cos(step), sin(step)
+            dx *= a.radius
+            dy *= a.radius
+            yield round(x + dx, 4), round(y + dy, 4)
+
+
 lookup = {
     (Rectangle, "dark"): process_rectangle,
     (Circle, "dark"): process_circle,
     (Region, "dark"): process_region,
     Line: process_line,
+    Arc: process_arc,
 }
 
 

@@ -135,3 +135,5 @@ dmypy.json
 /designs/
 /rs274/output.stl
 /original/
+/settings.json
+/optimization/

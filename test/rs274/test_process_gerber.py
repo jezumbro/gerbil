@@ -1,10 +1,17 @@
 from pprint import pprint
 
 import pytest
+from gerber.primitives import Arc, Circle
 from shapely.geometry import LineString, MultiPolygon, Polygon
 from shapely.ops import cascaded_union
 
-from rs274.primitives import find, fix_region, inner_polygons, remove_duplicate_points
+from rs274.primitives import (
+    find,
+    fix_region,
+    inner_polygons,
+    process_arc,
+    remove_duplicate_points,
+)
 from rs274.process_gerber import merge_close_polygons
 from util import first
 
@@ -73,6 +80,21 @@ def test_remove_duplicate_points():
 def test_remove_duplicate_points_no_dups():
     in_data = ((1.0, 2.0), (1.0, 3.0))
     assert remove_duplicate_points(in_data) == ((1, 2), (1, 3))
+
+
+def test_process_arc():
+    a = Arc(
+        start=(0, 0),
+        end=(0, 0),
+        center=(1, 0),
+        direction="counterclockwise",
+        aperture=Circle(None, 0.01, 0),
+        quadrant_mode="multi-quadrant",
+        level_polarity="dark",
+    )
+    q = list(process_arc(a))
+    assert len(q) == 20
+    assert q[-1] == q[0]
 
 
 def test_nested_polygon_shapes(simple_region_with_nested_hole):
