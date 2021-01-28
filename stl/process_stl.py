@@ -1,8 +1,10 @@
 from itertools import chain
-from typing import List, Tuple, Iterable, Reversible
+from typing import Iterable, List, Reversible, Tuple
+
 import tripy
 from shapely.geometry import Polygon
-from sparkles import pairwise
+
+from util import pairwise
 
 
 def make_side_triangles(path: List[Tuple[float, float]], height: float = 0.1):

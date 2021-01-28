@@ -31,15 +31,20 @@ def call_slic3r(params: PrintParams, file_path: Path):
     settings = read_config()
     if not str(file_path.absolute()).endswith(".stl"):
         stl_file = get_stl_file_path(file_path)
-        q = create_polygons(str(file_path.absolute()))
-        triangles = extrude_many_polygons(q, params.line_width)
+        triangles = extrude_many_polygons(
+            create_polygons(str(file_path.absolute())), params.line_width
+        )
         write_ascii_stl(triangles, str(stl_file.absolute()))
         file_path = stl_file
     cmd = (
-        f"{settings.slic3r_exe} --export-gcode --center 0,0 --nozzle-diameter {params.line_width}"
-        + f" --first-layer-height {params.dispense_gap} --layer-height {params.line_width}"
-        + f" --filament-retract-lift {params.travel_height}"
-        + f" --infill-first --infill-only-where-needed --skirts 0 {file_path.absolute()}"
+        f"{settings.slic3r_exe} --export-gcode --dont-arrange --load config.ini "
+        f"--nozzle-diameter {params.line_width} "
+        f"--first-layer-height {params.line_width} "
+        f"--layer-height {params.line_width} "
+        f"--filament-retract-lift {params.travel_height} "
+        f"--infill-first --infill-only-where-needed --skirts 0 "
+        " "
+        f"{file_path.absolute()}"
     )
     logger.info(f"slic3r status: {not os.system(cmd)}")
     logger.info(f"output file: {file_path.absolute()}")

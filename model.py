@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
 
@@ -22,7 +24,7 @@ class OptimizationParams:
 
 @dataclass
 class PrintParams:
-    line_width: float = 0.1
+    line_width: float = 0.144
     approach_speed: float = 5
     exit_speed: float = 5
 
@@ -46,3 +48,39 @@ class PrintParams:
     @classmethod
     def parameters(cls):
         return cls.__annotations__.keys()
+
+
+@dataclass
+class Recipe:
+    name: str
+    data: dict
+
+    def save_recipe_to_disk(self, file: RecipeFile):
+        existing = file.load()
+        existing[self.name] = self.data
+        file.save(existing)
+
+    def save_recipe_to_server(self, url, psk):
+        pass
+
+
+class RecipeFile:
+    path: Path = Path("./recipes.json")
+    data: dict = None
+
+    def load(self):
+        if not self.path.is_file():
+            self.data = {}
+        else:
+            with open(self.path, "r") as f:
+                self.data = json.load(f)
+
+    def save(self):
+        with open(self.path, "w") as f:
+            json.dump(self.data, f)
+
+    def add_recipe(self, r: Recipe):
+        self.data[r.name] = r
+
+    def __getitem__(self, item):
+        return self.data[item]

@@ -1,9 +1,8 @@
 from itertools import permutations
-from pprint import pprint
+from math import cos, sin
 from typing import List, Tuple
 
 from gerber.primitives import Arc, Circle, Line, Rectangle, Region
-from loguru import logger
 from shapely.geometry import Point, Polygon
 
 from util import interpolate, n_wise
@@ -46,9 +45,6 @@ def fix_region(v):
 
 def process_region(x: Region):
     return fix_region(get_verticies(x))
-
-
-from math import cos, sin
 
 
 def process_arc(a: Arc):

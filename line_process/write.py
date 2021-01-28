@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Dict, List
 
 from loguru import logger
@@ -17,42 +15,6 @@ def process(values: Dict[str, str], settings: dict):
     logger.debug("optimization line_process")
     logger.debug(values)
     pass
-
-
-@dataclass
-class Recipe:
-    name: str
-    data: dict
-
-    def save_recipe_to_disk(self, file: RecipeFile):
-        existing = file.load()
-        existing[self.name] = self.data
-        file.save(existing)
-
-    def save_recipe_to_server(self, url, psk):
-        pass
-
-
-class RecipeFile:
-    path: Path = Path("./recipes.json")
-    data: dict = None
-
-    def load(self):
-        if not self.path.is_file():
-            self.data = {}
-        else:
-            with open(self.path, "r") as f:
-                self.data = json.load(f)
-
-    def save(self):
-        with open(self.path, "w") as f:
-            json.dump(self.data, f)
-
-    def add_recipe(self, r: Recipe):
-        self.data[r.name] = r
-
-    def __getitem__(self, item):
-        return self.data[item]
 
 
 def save_recipe(values: Dict[str, str], settings: dict, path=None):
