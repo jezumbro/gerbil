@@ -1,8 +1,15 @@
 import pytest
 from shapely.geometry import Polygon
 
+from model import PrintParams
+
 simple_rect = Polygon([(0, 0), (0, 50), (50, 50), (50, 0)])
 simple_triangle = Polygon([(0, 0), (0, 50), (50, 0)])
+
+
+@pytest.fixture
+def params():
+    return PrintParams()
 
 
 @pytest.fixture

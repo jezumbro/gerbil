@@ -6,29 +6,16 @@ from loguru import logger
 
 from configuration import read_config
 from model import OptimizationParams, PrintParams
+from move_commands import (
+    move_statement,
+    move_z_direction,
+    print_statement,
+    open_valve,
+    close_valve,
+)
 from server import post_data
 from util import get_interpolated_value
 from validaton.main import parse_float
-
-
-def move_statement(*, x: float = 0, y: float = 0, z: float = 0):
-    return f"move {x:.3f} {y:.3f} {z:.3f}"
-
-
-def move_z_direction(speed: float, distance: float):
-    return [f"speed {speed:.3f}", move_statement(z=distance)]
-
-
-def print_statement(print_speed: float, *, x: float = 0, y: float = 0):
-    return [f"speed {print_speed:.3f}", move_statement(x=x, y=y)]
-
-
-def open_valve(distance: float, speed: float, delay: float):
-    return [f"trigvalverel {distance:.3f} {speed:.3f}", f"wait {delay:.3f}"]
-
-
-def close_valve(speed: float, delay: float):
-    return [f"valverel 0.000 {speed:.3f}", f"wait {delay:.3f}"]
 
 
 def format_line(params: PrintParams, print_distance: float, pitch: float):
@@ -38,6 +25,7 @@ def format_line(params: PrintParams, print_distance: float, pitch: float):
         *print_statement(params.print_speed, x=print_distance),
         *close_valve(params.close_speed, params.close_delay),
         *move_z_direction(params.exit_speed, params.travel_height),
+        f"speed {params.travel_speed}",
         move_statement(x=-print_distance, y=pitch),
     ]
 

@@ -48,3 +48,7 @@ def save_config(values, path=config_path, **kwargs):
     }
     data = {**settings.__dict__, **ret}
     write_config(path, data=data)
+
+
+if __name__ == "__main__":
+    write_config()

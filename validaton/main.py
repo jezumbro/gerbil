@@ -1,10 +1,7 @@
 from typing import Dict
 
-import PySimpleGUI as sg
-from loguru import logger
 
-
-def check_input(event: str, values: Dict[str, str], window: sg.Window, **kwargs):
+def check_input(event: str, values: Dict[str, str], window, **kwargs):
     element = window[event]
     if good_float(event, values):
         element.update(text_color="black")
