@@ -39,8 +39,9 @@ def call_slic3r(params: PrintParams, file_path: Path):
         )
         write_ascii_stl(triangles, str(stl_file.absolute()))
         file_path = stl_file
+    slicer = Path(settings.slic3r_exe)
     cmd = (
-        f"{settings.slic3r_exe} --export-gcode --dont-arrange --load config.ini "
+        f"{slicer.absolute()} --export-gcode --dont-arrange --load config.ini "
         f"--nozzle-diameter {params.line_width} "
         f"--first-layer-height {params.line_width} "
         f"--layer-height {params.line_width} "
