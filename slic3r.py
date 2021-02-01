@@ -41,11 +41,21 @@ def call_slic3r(params: PrintParams, file_path: Path):
         file_path = stl_file
     slicer = Path(settings.slic3r_exe)
     cmd = (
-        f"{slicer.absolute()} --export-gcode --dont-arrange --load config.ini "
+        f"{slicer.absolute()} --export-gcode --dont-arrange "
         f"--nozzle-diameter {params.line_width} "
         f"--first-layer-height {params.line_width} "
         f"--layer-height {params.line_width} "
         f"--filament-retract-lift {params.travel_height} "
+        f"--retract-speed {params.approach_speed} "
+        f"--travel-speed {params.travel_speed} "
+        "--infill-only-where-needed --infill-overlap 30% "
+        f"--first-layer-extrusion-width {params.line_width} "
+        f"--perimeters 2 "
+        f"--external-perimeter-extrusion-width {params.line_width+.001} "
+        f"--external-perimeter-extrusion-width {params.line_width+.001} "
+        f"--perimeter-extrusion-width {params.line_width+.001} "
+        f"--infill-extrusion-width {params.line_width+.001} "
+        f"--first-layer-speed {params.print_speed:.3f} "
         f"--infill-first --infill-only-where-needed --skirts 0 "
         " "
         f"{file_path.absolute()}"
@@ -55,4 +65,8 @@ def call_slic3r(params: PrintParams, file_path: Path):
 
 
 if __name__ == "__main__":
-    call_slic3r(PrintParams(), Path(config.design_file))
+    file = Path(config.design_file)
+    params = PrintParams()
+    params.line_width = 0.08
+    call_slic3r(params, file)
+    write_psj_file(params, file)
