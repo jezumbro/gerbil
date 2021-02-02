@@ -6,3 +6,4 @@ tripy
 PySimpleGUI
 loguru
 requests
+pygcode
