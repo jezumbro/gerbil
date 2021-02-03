@@ -1,8 +1,8 @@
 from pprint import pprint
 
-from gcode.parse import process_g1
 import pytest
 
+from gcode.parse import process_g1
 from model import PrintParams
 
 
@@ -17,6 +17,6 @@ from model import PrintParams
 )
 def test_process_g1(line, expected):
     params = PrintParams()
-    params.line_width = 0.1
+    params.width = 0.1
     g1 = process_g1(line, params=params)
     assert g1 == expected

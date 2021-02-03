@@ -41,3 +41,10 @@ def interpolate(start: float, end: float = None, steps=10):
 
     for v in range(steps):
         yield start + v * step_size
+
+
+def parse_float(v: str):
+    try:
+        return float(v)
+    except ValueError:
+        return None

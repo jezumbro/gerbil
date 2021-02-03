@@ -9,31 +9,15 @@ from configuration import config_path
 from model import Settings
 from util import first
 from validaton.main import good_float
+from model import PrintParams
 
+from pathlib import Path
 
-def process(values: Dict[str, str], settings: dict):
-    logger.debug("optimization line_process")
-    logger.debug(values)
-    pass
+def save_recipe(params: PrintParams, path: Path):
+    with open(path.absolute(),'w') as f:
+        json.dump(params, f)
 
-
-def save_recipe(values: Dict[str, str], settings: dict, path=None):
-    recipe_name = values.get("recipe_name")
-    if not recipe_name:
-        logger.error("Invalid recipe name")
-        return
-    good_recipe = get_settings(values)
-    if not good_recipe:
-        logger.debug(good_recipe)
-        logger.error("Invalid argument in settings")
-        return
-    logger.debug(settings)
-    recipes: List[dict] = settings.get("recipes", [])
-
-    def match_name(x: dict):
-        return x.get("recipe_name").casefold() == recipe_name.casefold()
-
-    recipe: dict = first(recipes, condition=match_name, default=None)
+    logger.info(f'wrote recpie at {path.absolute()}')
 
 
 def load_settings(path=None):

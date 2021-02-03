@@ -15,6 +15,7 @@ class Settings:
     eps: float = 0.005
     recipes: List[dict] = None
     slic3r_exe: str = ""
+    recipe_dir: str = "recipes"
 
 
 @dataclass
@@ -24,7 +25,7 @@ class OptimizationParams:
 
 @dataclass
 class PrintParams:
-    line_width: float = 0.144
+    width: float = 0.144
     approach_speed: float = 5
     exit_speed: float = 5
 

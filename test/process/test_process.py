@@ -4,8 +4,8 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-from line_process import save_recipe
-from line_process.system_files import get_optimization_parameters
+from process import save_recipe
+from process.system_files import get_optimization_parameters
 from util import get_interpolated_value, interpolate
 
 

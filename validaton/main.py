@@ -16,10 +16,3 @@ def good_float(e: str, v: Dict[str, str]):
         return f"{d:0.3f}"
     except ValueError as q:
         return None
-
-
-def parse_float(v: str):
-    try:
-        return float(v)
-    except ValueError:
-        return None

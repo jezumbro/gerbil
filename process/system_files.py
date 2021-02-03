@@ -1,21 +1,14 @@
-from collections import defaultdict
 from pathlib import Path
 
 from loguru import logger
 
 from configuration import read_config
 from model import OptimizationParams, PrintParams
-from move_commands import (
-    move_statement,
-    move_z_direction,
-    print_statement,
-    open_valve,
-    close_valve,
-    header,
-)
+from move_commands import (close_valve, header, move_statement,
+                           move_z_direction, open_valve, print_statement)
+from process.params import format_key, parse_parameters
 from server import post_data
-from util import get_interpolated_value
-from validaton.main import parse_float
+from util import get_interpolated_value, parse_float
 
 
 def format_line(params: PrintParams, print_distance: float, pitch: float):
@@ -30,25 +23,6 @@ def format_line(params: PrintParams, print_distance: float, pitch: float):
     ]
 
 
-def parse_parameters(parameters):
-    ret = defaultdict(list)
-    for k, v in parameters.items():
-        if type(k) is not str:
-            continue
-        new = format_key(k)
-        if new not in PrintParams.parameters():
-            continue
-        ret[new].append(parse_float(v))
-    for k, v in ret.items():
-        if len(v) == 1:
-            v.append(None)
-    return ret
-
-
-def format_key(k: str):
-    return k.replace("_0", "").replace("_1", "")
-
-
 def get_optimization_params(parameters):
     ret = {}
     for k, v in parameters.items():
@@ -58,17 +32,6 @@ def get_optimization_params(parameters):
             new = format_key(k)
             ret[new] = parse_float(v)
     return ret
-
-
-def get_default_printing_params(parameters: dict) -> PrintParams:
-    printing_params = parse_parameters(parameters)
-    print(printing_params)
-    return PrintParams(
-        **{
-            k: get_interpolated_value(start, 0)
-            for k, (start, end) in printing_params.items()
-        }
-    )
 
 
 def get_optimization_parameters(parameters: dict):

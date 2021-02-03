@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import PySimpleGUI as sg
 
 PREFIX = "line"
@@ -109,14 +111,24 @@ def export():
     return [
         [
             sg.T("Recipe Name:", size=default_size),
-            sg.I(key="recipe_name", size=default_size),
-            sg.FileBrowse("Load", key="load", size=(12, 1)),
+            sg.I(key="recipe_name", size=(26, 1)),
+            sg.FileBrowse("Load", key="load", size=(12, 1), enable_events=True, initial_folder='./recpies',change_submits=),
         ],
-        [sg.T("Material:", size=default_size), sg.I(key="material", size=default_size)],
-        [sg.T("Pen Tip:", size=default_size), sg.I(key="pen_tip", size=default_size)],
         [
-            sg.FileSaveAs("Save", key="save", size=(12, 1)),
-            sg.T(size=(9, 1)),
+            sg.T("Material:", size=default_size),
+            sg.I(key="material", size=(26, 1)),
+            sg.Save(
+                key="save", size=(12, 1)
+            ),
+        ],
+        [
+            sg.T("Pen Tip:", size=default_size),
+            sg.I(key="pen_tip", size=(26, 1)),
+            sg.T(size=default_size),
+        ],
+        [
+            sg.T(size=default_size),
+            sg.T(size=(26, 1)),
             sg.Button("Export", key="optimization", size=(12, 1)),
         ],
     ]

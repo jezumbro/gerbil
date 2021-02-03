@@ -1,7 +1,8 @@
 from pprint import pprint
 
-from line_process.system_files import format_optimization_job_lines
 from move_commands import open_valve
+from process.params import get_printing_params
+from process.system_files import format_optimization_job_lines
 
 
 def test_open_valve():
@@ -20,6 +21,7 @@ def test_format_op(app_values):
     relative_y = [float(x[1]) for x in move_lines]
     relative_z = [float(x[2]) for x in move_lines]
     absolute_z = []
+    params = get_printing_params(app_values)
     last_z = 0
     for z in relative_z:
         new_z = last_z + z
@@ -29,4 +31,4 @@ def test_format_op(app_values):
 
     assert sum(relative_x) == 0
     assert sum(relative_y) == 5.0
-    assert sum(relative_z) == 0.5
+    assert round(sum(relative_z), 1) == 0.5

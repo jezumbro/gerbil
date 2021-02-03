@@ -23,7 +23,7 @@ def process_g1(line: str, params: PrintParams):
         x = Line(line)
         g1: GCodeLinearMove = first(x.gcodes, condition=find_linear_move)
         fr: GCodeFeedRate = first(x.gcodes, condition=find_feed_rate, default=None)
-        z_value = g1.params["Z"].value - params.line_width + 0.001
+        z_value = g1.params["Z"].value - params.width + 0.001
         f_value = fr.word.value if fr and fr.word else 900
         return f"G1 Z{z_value:.3f} F{f_value:.3f}\n"
     return line
