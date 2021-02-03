@@ -31,14 +31,25 @@ def process_slicer(values: dict, **kwargs):
 
 
 def call_slic3r(params: PrintParams, file_path: Path):
-    settings = read_config()
     if not str(file_path.absolute()).endswith(".stl"):
-        stl_file = get_stl_file_path(file_path)
-        triangles = extrude_many_polygons(
-            create_polygons(str(file_path.absolute())), params.line_width
-        )
-        write_ascii_stl(triangles, str(stl_file.absolute()))
-        file_path = stl_file
+        file_path = update_file_path_to_stl(file_path, params.line_width)
+    cmd = extract_slicer_command(file_path, params)
+    logger.info(f"slic3r status: {not os.system(cmd)}")
+    logger.info(f"output file: {file_path.absolute()}")
+
+
+def update_file_path_to_stl(file_path: Path, line_width: float):
+    stl_file = get_stl_file_path(file_path)
+    triangles = extrude_many_polygons(
+        create_polygons(str(file_path.absolute())), line_width
+    )
+    write_ascii_stl(triangles, str(stl_file.absolute()))
+    file_path = stl_file
+    return file_path
+
+
+def extract_slicer_command(file_path: Path, params: PrintParams):
+    settings = read_config()
     slicer = Path(settings.slic3r_exe)
     cmd = (
         f"{slicer.absolute()} --export-gcode --dont-arrange "
@@ -50,18 +61,17 @@ def call_slic3r(params: PrintParams, file_path: Path):
         f"--travel-speed {params.travel_speed} "
         "--infill-only-where-needed --infill-overlap 30% "
         f"--first-layer-extrusion-width {params.line_width} "
-        f"--perimeters 2 "
-        f"--external-perimeter-extrusion-width {params.line_width+.001} "
-        f"--external-perimeter-extrusion-width {params.line_width+.001} "
-        f"--perimeter-extrusion-width {params.line_width+.001} "
-        f"--infill-extrusion-width {params.line_width+.001} "
+        "--perimeters 2 "
+        f"--external-perimeter-extrusion-width {params.line_width + .001} "
+        f"--external-perimeter-extrusion-width {params.line_width + .001} "
+        f"--perimeter-extrusion-width {params.line_width + .001} "
+        f"--infill-extrusion-width {params.line_width + .001} "
         f"--first-layer-speed {params.print_speed:.3f} "
         f"--infill-first --infill-only-where-needed --skirts 0 "
         " "
         f"{file_path.absolute()}"
     )
-    logger.info(f"slic3r status: {not os.system(cmd)}")
-    logger.info(f"output file: {file_path.absolute()}")
+    return cmd
 
 
 if __name__ == "__main__":

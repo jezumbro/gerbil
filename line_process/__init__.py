@@ -1,7 +1,7 @@
 from configuration import config_path, read_config, write_config
 
 from .system_files import write_script
-from .write import get_recipe, load_recipe, process, save_recipe
+from .write import get_recipe, load_recipe, save_recipe
 
 
 def process_optimization(values: dict, settings: dict, **kwargs):

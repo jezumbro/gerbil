@@ -46,7 +46,7 @@ def parse_parameters(parameters):
 
 
 def format_key(k: str):
-    return k.replace("_0", "").replace("_1", "").replace("line_", "")
+    return k.replace("_0", "").replace("_1", "")
 
 
 def get_optimization_params(parameters):
@@ -62,6 +62,7 @@ def get_optimization_params(parameters):
 
 def get_default_printing_params(parameters: dict) -> PrintParams:
     printing_params = parse_parameters(parameters)
+    print(printing_params)
     return PrintParams(
         **{
             k: get_interpolated_value(start, 0)
