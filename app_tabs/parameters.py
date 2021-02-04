@@ -112,14 +112,18 @@ def export():
         [
             sg.T("Recipe Name:", size=default_size),
             sg.I(key="recipe_name", size=(26, 1)),
-            sg.FileBrowse("Load", key="load", size=(12, 1), enable_events=True, initial_folder='./recpies',change_submits=),
+            sg.FileBrowse(
+                "Load",
+                key="load",
+                size=(12, 1),
+                enable_events=True,
+                initial_folder="./recpies",
+            ),
         ],
         [
             sg.T("Material:", size=default_size),
             sg.I(key="material", size=(26, 1)),
-            sg.Save(
-                key="save", size=(12, 1)
-            ),
+            sg.Save(key="save", size=(12, 1)),
         ],
         [
             sg.T("Pen Tip:", size=default_size),

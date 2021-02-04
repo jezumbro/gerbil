@@ -4,8 +4,14 @@ from loguru import logger
 
 from configuration import read_config
 from model import OptimizationParams, PrintParams
-from move_commands import (close_valve, header, move_statement,
-                           move_z_direction, open_valve, print_statement)
+from move_commands import (
+    close_valve,
+    header,
+    move_statement,
+    move_z_direction,
+    open_valve,
+    print_statement,
+)
 from process.params import format_key, parse_parameters
 from server import post_data
 from util import get_interpolated_value, parse_float

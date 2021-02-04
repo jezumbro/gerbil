@@ -13,11 +13,12 @@ from model import PrintParams
 
 from pathlib import Path
 
+
 def save_recipe(params: PrintParams, path: Path):
-    with open(path.absolute(),'w') as f:
+    with open(path.absolute(), "w") as f:
         json.dump(params, f)
 
-    logger.info(f'wrote recpie at {path.absolute()}')
+    logger.info(f"wrote recpie at {path.absolute()}")
 
 
 def load_settings(path=None):
