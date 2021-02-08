@@ -1,24 +1,23 @@
 from __future__ import annotations
 
 import json
+import os
+from pathlib import Path
 from typing import Dict, List
 
 from loguru import logger
 
 from configuration import config_path
-from model import Settings
+from model import PrintParams, Settings
 from util import first
 from validaton.main import good_float
-from model import PrintParams
-
-from pathlib import Path
 
 
 def save_recipe(params: PrintParams, path: Path):
     with open(path.absolute(), "w") as f:
         json.dump(params, f)
 
-    logger.info(f"wrote recpie at {path.absolute()}")
+    logger.info(f"wrote recipe at {path.absolute()}")
 
 
 def load_settings(path=None):
@@ -46,16 +45,36 @@ def get_settings(values: Dict[str, str]):
 
 def set_values(values, recipe):
     for k, v in recipe.items():
-        values[f"{k}_0"] = v
+        values[f"line_{k}_0"] = str(v)
+    return values
 
 
-def load_recipe(values: Dict[str, str], settings: dict):
-    def match_name(x: dict):
-        return values.get("recipe_name").casefold() == x.get("recipe_name").casefold()
+def load_all_files():
+    p = Path("recipes")
+    logger.info(p.absolute())
+    for f in p.rglob("*.json"):
+        yield f
 
-    recipe = first(settings.get("recipes"), condition=match_name, default=None)
-    set_values(values, recipe)
-    return
+
+def load_recipe(name: str, values: Dict[str, str]):
+    if not name.endswith(".json"):
+        name += ".json"
+
+    def match_name(x: Path):
+        i_str = str(x.absolute())
+        print(i_str)
+        return i_str.casefold().endswith(name.casefold())
+
+    files = list(load_all_files())
+    recipe = first(files, condition=match_name, default=None)
+    if not recipe:
+        logger.info(list(load_all_files()))
+        logger.warning(f"unable to find recipe {name}")
+        return
+    logger.info(f"loading recipe {recipe}")
+    with open(recipe, "r") as fp:
+        data = json.load(fp)
+    return set_values(values, data)
 
 
 def valid_key(x: str):
@@ -70,3 +89,7 @@ def convert_key(x: str):
     if x.endswith("_0"):
         return x.replace("_0", "")
     return None
+
+
+if __name__ == "__main__":
+    load_recipe("test.json", values={})

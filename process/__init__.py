@@ -1,10 +1,12 @@
+from pathlib import Path
+
+from loguru import logger
+
 from configuration import config_path, read_config, write_config
+from process.params import get_printing_params
 
 from .recipes import get_recipe, load_recipe, save_recipe
 from .system_files import write_script
-from process.params import get_printing_params
-
-from pathlib import Path
 
 
 def process_optimization(values: dict, settings: dict, **kwargs):
@@ -25,7 +27,7 @@ def process_save(values: dict, settings: dict, **kwargs):
     if not name.endswith(".json"):
         name += ".json"
 
-    recipe_folder = Path("./recpies")
+    recipe_folder = Path("./recipes")
     if not recipe_folder.exists():
         recipe_folder.mkdir()
     params = get_printing_params(values)
@@ -37,9 +39,11 @@ def process_save(values: dict, settings: dict, **kwargs):
     save_recipe(params.__dict__, path=recipe)
 
 
-def process_load(values: dict, settings: dict, **kwargs):
-    print("here")
+def process_load(values: dict, window, **kwargs):
     recipe_name = values.get("recipe_name")
     if not recipe_name:
         return
-    return load_recipe(values, settings)
+    loaded_values = load_recipe(recipe_name, values)
+    for k, v in loaded_values.items():
+        if type(k) == str and k.startswith("line_"):
+            window[k].update(v)

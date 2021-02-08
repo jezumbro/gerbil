@@ -92,7 +92,7 @@ def speed_group():
 
 def height_group():
     return [
-        fixed_parameter("Line Width:", "line_width", "mm", "0.100"),
+        fixed_parameter("Line Width:", "width", "mm", "0.100"),
         fixed_parameter("Travel Height:", "travel_height", "mm", "0.500"),
         tunable_parameter("Dispense Gap:", "dispense_gap", "mm", "0.500"),
     ]
@@ -112,12 +112,10 @@ def export():
         [
             sg.T("Recipe Name:", size=default_size),
             sg.I(key="recipe_name", size=(26, 1)),
-            sg.FileBrowse(
+            sg.Button(
                 "Load",
                 key="load",
                 size=(12, 1),
-                enable_events=True,
-                initial_folder="./recpies",
             ),
         ],
         [

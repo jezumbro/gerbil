@@ -1,8 +1,10 @@
 import PySimpleGUI as sg
+from loguru import logger
 
 from app_tabs import parameter_tab, process_tab, settings_tab
 from configuration import save_config
-from process import process_load, process_optimization, process_save, process_startup
+from process import (process_load, process_optimization, process_save,
+                     process_startup)
 from slic3r import process_slicer
 from validaton.main import check_input
 
@@ -15,6 +17,7 @@ lookup = {
     "process_file": process_slicer,
     "save": process_save,
     "load": process_load,
+    "recipe_name": lambda x: print(x),
 }
 
 
